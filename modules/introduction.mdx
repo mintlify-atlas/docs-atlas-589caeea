@@ -1,0 +1,52 @@
+---
+title: "Building TizenBrew modules"
+description: "An overview of the TizenBrew module system — what modules are, how they're distributed, and the two types you can build."
+---
+
+TizenBrew modules are standard npm or Node packages with a few extra fields in `package.json`. You publish them to npm or GitHub, and TizenBrew fetches and serves them automatically via the jsDelivr CDN — no manual deployment to the TV required.
+
+<Note>
+  Modules are normal npm packages. The only thing that makes them TizenBrew modules is a set of extra fields in `package.json` that describe how TizenBrew should handle them.
+</Note>
+
+## How modules are identified
+
+You reference a module by its package identifier:
+
+| Source | Format | Example |
+|--------|--------|---------|
+| npm | `npm/package-name` | `npm/@foxreis/tizentube` |
+| GitHub | `gh/user/repo` | `gh/reisxd/TizenTube` |
+
+When you add a module in the TizenBrew UI, you enter this identifier. TizenBrew's background service fetches `package.json` from `https://cdn.jsdelivr.net/<identifier>/package.json` to discover the module's type and configuration.
+
+## How modules are served
+
+TizenBrew runs a local HTTP server on port `8081`. When a module is launched:
+
+- For **application modules**, the service proxies all file requests through `http://127.0.0.1:8081/module/<encoded-package-name>/<file-path>`, fetching each file from jsDelivr on demand.
+- For **site modification modules**, TizenBrew navigates to the target website and injects the module's script into the page.
+
+This means your module's files are always fetched fresh from jsDelivr — you never need to push an update to the TV directly.
+
+## Module types
+
+There are two types of TizenBrew modules, set by the `packageType` field in `package.json`.
+
+<CardGroup cols={2}>
+  <Card title="Application modules" icon="window" href="/modules/application-modules">
+    Standalone web apps served locally by TizenBrew. Use these to run apps that don't have an existing website — like Jellyfin.
+  </Card>
+  <Card title="Site modification modules" icon="code" href="/modules/site-modification-modules">
+    JavaScript injected into an existing website on the TV. Use these to extend or patch sites like YouTube.
+  </Card>
+</CardGroup>
+
+## Real-world examples
+
+Both module types are used in production today:
+
+- **[TizenTube](https://github.com/reisxd/TizenTube)** — a site modification module that injects custom JavaScript into YouTube on Tizen TVs.
+- **[Jellyfin-Tizen](https://github.com/GlenLowland/jellyfin-tizen-npm-publish)** — an application module that serves the Jellyfin web client locally on the TV.
+
+These repositories are good references for how a real `package.json` and module structure look in practice.

@@ -1,0 +1,99 @@
+---
+title: "Module examples"
+description: "Real-world examples of TizenBrew modules, including package.json files and how to install them."
+---
+
+These examples are based on real modules that run on TizenBrew. Use them as a starting point when building your own module.
+
+---
+
+## TizenTube (site modification)
+
+[TizenTube](https://github.com/reisxd/TizenTube) is a `mods` module that injects JavaScript into YouTube on Samsung TV. It is the default module bundled with TizenBrew.
+
+A site modification module opens a target website and runs your script inside it. The `websiteURL` field tells TizenBrew where to navigate, and `main` points to the script that gets injected.
+
+<CodeGroup>
+
+```json package.json
+{
+  "name": "@foxreis/tizentube",
+  "version": "1.0.0",
+  "appName": "TizenTube",
+  "description": "YouTube enhancements for Samsung TV.",
+  "packageType": "mods",
+  "websiteURL": "https://www.youtube.com",
+  "main": "index.js",
+  "evaluateScriptOnDocumentStart": false,
+  "keys": ["ColorF0Red", "ColorF1Green", "ColorF2Yellow", "ColorF3Blue"]
+}
+```
+
+</CodeGroup>
+
+<Tip>
+  Set `evaluateScriptOnDocumentStart` to `true` if your script needs to run before the page's own JavaScript executes.
+</Tip>
+
+---
+
+## Jellyfin-Tizen (application)
+
+[Jellyfin-Tizen](https://github.com/GlenLowland/jellyfin-tizen-npm-publish) is an `app` module that serves the Jellyfin web client locally through TizenBrew's built-in HTTP proxy.
+
+An application module serves static files through TizenBrew's HTTP server at `http://127.0.0.1:8081/module/<name>/<appPath>`. No website URL is needed — you provide the path to your `index.html`.
+
+<CodeGroup>
+
+```json package.json
+{
+  "name": "jellyfin-tizen",
+  "version": "1.0.0",
+  "appName": "Jellyfin",
+  "description": "Jellyfin web client for Samsung TV.",
+  "packageType": "app",
+  "appPath": "app/index.html",
+  "keys": ["MediaPlayPause", "MediaStop", "MediaFastForward", "MediaRewind"]
+}
+```
+
+</CodeGroup>
+
+<Note>
+  The `appPath` is relative to the module's package root as served from the jsDelivr CDN. Make sure the path matches the actual file layout of your published package.
+</Note>
+
+---
+
+## Adding a module from the TizenBrew UI
+
+You can add modules directly from the **Module Manager** without editing any configuration files manually.
+
+<Steps>
+  <Step title="Open Module Manager">
+    Launch TizenBrew and navigate to **Module Manager** from the home screen.
+  </Step>
+  <Step title="Choose a source">
+    Select **Add from npm** to install a published npm package, or **Add from GitHub** to install directly from a GitHub repository.
+  </Step>
+  <Step title="Enter the module identifier">
+    - **npm:** Enter the scoped package name, for example `@foxreis/tizentube`.
+    - **GitHub:** Enter the repository in `username/repo` format, for example `reisxd/TizenTube`.
+  </Step>
+  <Step title="Confirm">
+    TizenBrew sends a `ModuleAction` event with `action: "add"` to the background service, which saves the module to `/home/owner/share/tizenbrewConfig.json`. The module appears in your list immediately.
+  </Step>
+</Steps>
+
+---
+
+## Explore module types
+
+<CardGroup cols={2}>
+  <Card title="Application modules" icon="window-maximize" href="/modules/application-modules">
+    Serve a local web app through TizenBrew's built-in HTTP proxy.
+  </Card>
+  <Card title="Site modification modules" icon="code" href="/modules/site-modification-modules">
+    Inject JavaScript into an existing website on the TV browser.
+  </Card>
+</CardGroup>

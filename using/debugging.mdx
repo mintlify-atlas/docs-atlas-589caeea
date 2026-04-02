@@ -1,0 +1,51 @@
+---
+title: "Debugging"
+description: "How TizenBrew's automatic debug mode works for module developers."
+---
+
+<Warning>
+  Debug mode is an advanced feature intended for module developers. It requires your TV to be in Developer Mode with a specific network configuration.
+</Warning>
+
+TizenBrew supports an automatic debug mode that relaunches the app through ADB so you can attach a web inspector to a running module. When the conditions are met, TizenBrew detects the debug environment at startup and relaunches itself automatically.
+
+## How debug mode works
+
+When TizenBrew starts, the UI connects to the background service over WebSocket and immediately checks the debug status. This triggers the following automatic sequence:
+
+1. The UI requests the current debug state (`GetDebugStatus`).
+2. If no debug session is active, the UI checks whether a debug launch is possible (`CanLaunchInDebug`).
+3. The service queries `http://127.0.0.1:8001/api/v2/` and checks that `device.developerMode` is `"1"` and `device.developerIP` is `127.0.0.1`.
+4. If both conditions are met, the UI gets the TV's IP via `webapis.network.getIp()`, sends a `ReLaunchInDebug` event with the TV IP, and exits.
+5. The service establishes an ADB connection to `127.0.0.1:26101` and runs the following shell command:
+
+   ```bash
+   shell:0 debug <packageId>.TizenBrewStandalone
+   ```
+
+   On Tizen 3, an additional `0` argument is appended.
+
+6. The TV responds with a port number. The service uses Chrome DevTools Protocol (CDP) to connect to that port and begin the debug session.
+
+Once connected, the debugger fetches module scripts from jsDelivr and evaluates them in the page context — either after load or at document start, depending on `evaluateScriptOnDocumentStart`.
+
+## Debug state flags
+
+TizenBrew tracks three internal debug state flags:
+
+| Flag | Description |
+|---|---|
+| `tizenDebug` | Tizen-level ADB debug session is active |
+| `webDebug` | Web content (CDP) debug session is established |
+| `rwiDebug` | Remote Web Inspector debug session is active |
+
+## Requirements
+
+For TizenBrew to enter debug mode automatically, your TV must meet both conditions:
+
+- **Developer Mode enabled** — Open **Apps**, enter `12345`, and turn on Developer Mode.
+- **Host PC IP set to `127.0.0.1`** — In the Developer Mode dialog, set Host PC IP to `127.0.0.1`.
+
+<Note>
+  If the debug check fails (for example, the SDB daemon is not reachable), TizenBrew displays an error: "Could not connect to the SDB Daemon. Are you sure you changed the Host PC IP to 127.0.0.1? If you have, hold the power button till you see the Samsung logo."
+</Note>

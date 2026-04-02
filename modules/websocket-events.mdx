@@ -1,0 +1,306 @@
+---
+title: "WebSocket events reference"
+description: "Complete reference for all WebSocket events exchanged between the TizenBrew UI and its background service."
+---
+
+TizenBrew's background service communicates with the UI over a WebSocket server listening at `ws://127.0.0.1:8081`. All messages are JSON objects with the following shape:
+
+```json
+{
+  "type": <event number>,
+  "payload": <any>
+}
+```
+
+The `type` field is an integer that identifies the event. The `payload` field carries event-specific data and may be `null`, a primitive, an object, or an array depending on the event.
+
+<Note>
+  Module background services also have access to the `wsConn` connection object stored in the shared `services` Map. A service can use this to send messages directly to the UI.
+</Note>
+
+---
+
+## Event table
+
+| Event name | Value | Direction | Description |
+|---|---|---|---|
+| `Ready` | `-1` | UI → Service | Sent by the UI when it is ready to receive messages. |
+| `AppControlData` | `0` | Both | Carries app control launch data for a module. |
+| `GetDebugStatus` | `1` | Both | Request or receive the current debug status. |
+| `CanLaunchInDebug` | `2` | Both | Check whether a debug launch is available. |
+| `ReLaunchInDebug` | `3` | UI → Service | Trigger an ADB debug relaunch. |
+| `GetModules` | `4` | Both | Request or receive the list of installed modules. |
+| `LaunchModule` | `5` | UI → Service | Launch a module. |
+| `StartService` | `6` | UI → Service | Start a module's background service. |
+| `GetServiceStatuses` | `7` | Both | Request or receive the status of all running services. |
+| `Error` | `8` | Service → UI | An error message from the service. |
+| `CanLaunchModules` | `9` | Both | Check whether modules can currently be launched. |
+| `ModuleAction` | `10` | UI → Service | Add, remove, or configure modules. |
+
+---
+
+## Event details
+
+### Ready (`-1`)
+
+Sent by the UI immediately after connecting. Marks the connection as ready so the service can begin sending queued events.
+
+```json
+{ "type": -1, "payload": null }
+```
+
+---
+
+### AppControlData (`0`)
+
+Carries app control data for a specific module. Sent in both directions: the UI sends a request with the package name and arguments, and the service echoes it back with `null` payload to confirm receipt.
+
+**UI → Service request:**
+
+```json
+{
+  "type": 0,
+  "payload": {
+    "package": "npm/@foxreis/tizentube",
+    "args": {}
+  }
+}
+```
+
+**Service → UI confirmation:**
+
+```json
+{ "type": 0, "payload": null }
+```
+
+---
+
+### GetDebugStatus (`1`)
+
+The UI sends this to request the current debug state. The service responds with an object describing which debug modes are active.
+
+**Service → UI response:**
+
+```json
+{
+  "type": 1,
+  "payload": {
+    "tizenDebug": false,
+    "webDebug": false,
+    "rwiDebug": false
+  }
+}
+```
+
+---
+
+### CanLaunchInDebug (`2`)
+
+The UI sends this to check whether the device is in developer mode and can perform a debug launch. The service responds with a boolean.
+
+**Service → UI response:**
+
+```json
+{ "type": 2, "payload": true }
+```
+
+---
+
+### ReLaunchInDebug (`3`)
+
+Sent by the UI to trigger a debug relaunch via ADB. The payload must include the TV's IP address.
+
+```json
+{
+  "type": 3,
+  "payload": { "tvIP": "192.168.1.100" }
+}
+```
+
+---
+
+### GetModules (`4`)
+
+The UI sends this to request the list of installed modules. If `payload` is `true`, the service reloads module data from the CDN before responding. If `payload` is `false` or omitted, the service returns the cached list.
+
+**UI → Service request (use cache):**
+
+```json
+{ "type": 4, "payload": false }
+```
+
+**UI → Service request (force reload):**
+
+```json
+{ "type": 4, "payload": true }
+```
+
+**Service → UI response (array of module objects):**
+
+```json
+{
+  "type": 4,
+  "payload": [
+    {
+      "fullName": "npm/@foxreis/tizentube",
+      "appName": "TizenTube",
+      "version": "1.0.0",
+      "name": "@foxreis/tizentube",
+      "appPath": "https://www.youtube.com/tv",
+      "keys": ["ColorF0Red"],
+      "moduleType": "npm",
+      "packageType": "mods",
+      "description": "YouTube enhancements for Samsung TV.",
+      "mainFile": "index.js",
+      "evaluateScriptOnDocumentStart": false
+    }
+  ]
+}
+```
+
+Each object in the array contains the following fields:
+
+| Field | Type | Description |
+|---|---|---|
+| `fullName` | string | Full module identifier, e.g. `"npm/@foxreis/tizentube"`. |
+| `appName` | string | Display name from `package.json`. |
+| `version` | string | Version from `package.json`. |
+| `name` | string | Package name portion of the identifier. |
+| `appPath` | string | For `app` modules: proxied URL. For `mods` modules: the `websiteURL` value. |
+| `keys` | string[] | Registered TV input keys. |
+| `moduleType` | string | Source type, e.g. `"npm"` or `"gh"`. |
+| `packageType` | string | `"app"` or `"mods"`. |
+| `description` | string | Module description. |
+| `serviceFile` | string \| undefined | Path to the Node.js service entry point, if any. |
+| `mainFile` | string \| undefined | (`mods` only) Path to the injection script. |
+| `evaluateScriptOnDocumentStart` | boolean \| undefined | (`mods` only) Whether to inject before page load. |
+| `tizenAppId` | string \| undefined | (`mods` only) Tizen native app ID. |
+
+---
+
+### LaunchModule (`5`)
+
+Sent by the UI to launch a module. The payload is a module object from the `GetModules` response.
+
+```json
+{
+  "type": 5,
+  "payload": {
+    "fullName": "npm/@foxreis/tizentube",
+    "name": "@foxreis/tizentube",
+    "appPath": "https://www.youtube.com/tv",
+    "moduleType": "npm",
+    "packageType": "mods",
+    "mainFile": "index.js",
+    "evaluateScriptOnDocumentStart": false
+  }
+}
+```
+
+---
+
+### StartService (`6`)
+
+Sent by the UI to explicitly start a module's background service without launching the module's UI.
+
+```json
+{
+  "type": 6,
+  "payload": {
+    "fullName": "npm/@foxreis/tizentube",
+    "serviceFile": "service/index.js"
+  }
+}
+```
+
+---
+
+### GetServiceStatuses (`7`)
+
+The UI sends this to get the status of all running services. The service responds with an array of status objects.
+
+**Service → UI response:**
+
+```json
+{
+  "type": 7,
+  "payload": [
+    {
+      "name": "npm/@foxreis/tizentube",
+      "hasCrashed": false,
+      "error": null
+    }
+  ]
+}
+```
+
+---
+
+### Error (`8`)
+
+Sent by the service when it encounters an error, such as invalid JSON or an unknown event type. The payload is an error message string.
+
+```json
+{ "type": 8, "payload": "Invalid JSON: ..." }
+```
+
+---
+
+### CanLaunchModules (`9`)
+
+Used to check whether modules can currently be launched. The service responds with a boolean.
+
+```json
+{ "type": 9, "payload": true }
+```
+
+---
+
+### ModuleAction (`10`)
+
+Sent by the UI to modify the module configuration. The service writes changes directly to `/home/owner/share/tizenbrewConfig.json`.
+
+**Payload structure:**
+
+```json
+{
+  "type": 10,
+  "payload": {
+    "action": "add" | "remove" | "autolaunch" | "autolaunchService",
+    "module": "npm/@foxreis/tizentube"
+  }
+}
+```
+
+The `action` field determines what the service does:
+
+| Action | Effect |
+|---|---|
+| `"add"` | Appends the module to the `modules` array in config, if not already present. |
+| `"remove"` | Removes the module from the `modules` array in config. |
+| `"autolaunch"` | Sets `autoLaunchModule` in config to the given module identifier. |
+| `"autolaunchService"` | Sets `autoLaunchServiceList` in config to the given value. |
+
+**Example — add a module:**
+
+```json
+{
+  "type": 10,
+  "payload": {
+    "action": "add",
+    "module": "npm/@foxreis/tizentube"
+  }
+}
+```
+
+**Example — set auto-launch module:**
+
+```json
+{
+  "type": 10,
+  "payload": {
+    "action": "autolaunch",
+    "module": "npm/@foxreis/tizentube"
+  }
+}
+```

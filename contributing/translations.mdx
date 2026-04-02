@@ -1,0 +1,100 @@
+---
+title: "Contributing translations"
+description: "How to add or improve a language translation in TizenBrew."
+---
+
+TizenBrew uses [i18next](https://www.i18next.com/) for internationalization. Language strings are stored as JSON files in `tizenbrew-app/TizenBrew/tizenbrew-ui/src/lang/`, with one file per language. The active languages are registered in `tizenbrew-ui/src/components/i18nResources.js`.
+
+<Note>
+  The translation guide in the TizenBrew repository is marked as outdated. The steps below reflect the current process, but check the [GitHub repository](https://github.com/reisxd/TizenBrew) for the latest information.
+</Note>
+
+## Supported languages
+
+The following languages are currently available in TizenBrew:
+
+| Language | Code | File |
+|---|---|---|
+| Arabic | `ar` | `ar-sa.json` |
+| Catalan | `cat` | `cat.json` |
+| Chinese | `zh` | `zh.json` |
+| Danish | `da` | `da.json` |
+| Dutch | `nl` | `nl.json` |
+| English | `en` | `en.json` |
+| Finnish | `fi` | `fi.json` |
+| French | `fr` | `fr.json` |
+| German | `de` | `de.json` |
+| Greek | `el` | `el.json` |
+| Hungarian | `hu` | `hu.json` |
+| Italian | `it` | `it.json` |
+| Lithuanian | `lt` | `lt.json` |
+| Polish | `pl` | `pl.json` |
+| Portuguese (Brazil) | `pt-br` | `pt-br.json` |
+| Portuguese (Portugal) | `pt-pt` | `pt-pt.json` |
+| Russian | `ru` | `ru.json` |
+| Serbian | `sr` | `sr.json` |
+| Spanish | `es` | `es.json` |
+| Thai | `th` | `th.json` |
+| Turkish | `tr` | `tr.json` |
+| Vietnamese | `vi` | `vi.json` |
+
+## Adding a new translation
+
+<Steps>
+  <Step title="Fork the repository">
+    Fork the [TizenBrew repository](https://github.com/reisxd/TizenBrew) on GitHub, then clone your fork locally.
+  </Step>
+  <Step title="Copy the English language file">
+    Copy `en.json` from `tizenbrew-app/TizenBrew/tizenbrew-ui/src/lang/` and rename it using the appropriate language and country code.
+
+    Most existing files use a short language code (e.g., `fr.json`, `de.json`). For languages with regional variants, a dash separator is used (e.g., `pt-br.json`, `pt-pt.json`). Check the existing files in `tizenbrew-ui/src/lang/` and follow the same pattern for your language.
+
+    ```
+    tizenbrew-ui/src/lang/
+    ├── en.json        ← copy this
+    └── fr.json        ← rename the copy to your language code
+    ```
+  </Step>
+  <Step title="Translate the file contents">
+    Open your new file and translate each string value into your language.
+
+    <Warning>
+      Never translate text inside curly braces `{}`. These are interpolation placeholders that are replaced with dynamic values at runtime. Translating or removing them will break the UI.
+    </Warning>
+
+    For example, in the following string, translate only `"Do you want to remove "` — leave `{{packageName}}` exactly as-is:
+
+    ```json
+    "confirmDelete": "Do you want to remove {{packageName}}?"
+    ```
+
+    A correctly translated entry looks like this:
+
+    ```json
+    "confirmDelete": "Voulez-vous supprimer {{packageName}} ?"
+    ```
+  </Step>
+  <Step title="Register your language in i18nResources.js">
+    Open `tizenbrew-app/TizenBrew/tizenbrew-ui/src/components/i18nResources.js` and add your language following the same pattern as the existing entries.
+
+    Add an import at the top of the file:
+
+    ```js
+    import FrenchLanguage from '../lang/fr.json';
+    ```
+
+    Then add an entry to the `resources` object, using the format `English Name (Native Name)` as a comment and the language code as the key:
+
+    ```js
+    const resources = {
+      // ...existing entries...
+      fr: {
+        translation: FrenchLanguage
+      },
+    };
+    ```
+  </Step>
+  <Step title="Submit a pull request">
+    Push your changes to your fork and open a pull request against the main [TizenBrew repository](https://github.com/reisxd/TizenBrew). Your translation will be reviewed and merged once approved.
+  </Step>
+</Steps>

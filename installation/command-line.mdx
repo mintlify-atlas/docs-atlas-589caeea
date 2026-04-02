@@ -1,0 +1,65 @@
+---
+title: "Install via command line"
+description: "Install TizenBrew manually using the Tizen Studio CLI tools."
+---
+
+This method uses the Tizen Studio command-line tools (`sdb` and `tizen`) to install TizenBrew directly from your PC. Use it if you prefer manual control or already have Tizen Studio set up.
+
+<Steps>
+  <Step title="Install Tizen Studio">
+    Follow Samsung's [Tizen Studio installation guide](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/installing-tv-sdk.html) to install Tizen Studio on your PC.
+
+    After installation, the CLI tools are available at the following paths:
+
+    <Tabs>
+      <Tab title="Windows">
+        | Tool | Path |
+        |------|------|
+        | `sdb` | `C:\tizen-studio\tools` |
+        | `tizen` | `C:\tizen-studio\tools\ide\bin` |
+      </Tab>
+      <Tab title="Linux">
+        | Tool | Path |
+        |------|------|
+        | `sdb` | `~/tizen-studio/tools` |
+        | `tizen` | `~/tizen-studio/tools/ide/bin` |
+      </Tab>
+    </Tabs>
+
+    Add the relevant directories to your `PATH` so you can run `sdb` and `tizen` without specifying the full path each time.
+  </Step>
+
+  <Step title="Connect to your TV">
+    Follow Samsung's [TV device connection guide](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/tv-device.html) to connect your TV to your PC.
+  </Step>
+
+  <Step title="Download the TizenBrew widget">
+    Download the latest `TizenBrewStandalone.wgt` file from the [TizenBrew releases page](https://github.com/reisxd/TizenBrew/releases).
+  </Step>
+
+  <Step title="Verify the TV connection">
+    Run the following command to confirm your TV is detected:
+
+    ```bash
+    sdb devices
+    ```
+
+    Your TV should appear in the output. If it does not, revisit the connection guide from the previous step.
+  </Step>
+
+  <Step title="Install the TizenBrew widget">
+    Run the following command, replacing `path/to/TizenBrewStandalone.wgt` with the path to the file you downloaded:
+
+    ```bash
+    tizen install -n path/to/TizenBrewStandalone.wgt
+    ```
+  </Step>
+
+  <Step title="Set the Host PC IP address">
+    Set the Host PC IP address on your TV to `127.0.0.1` by following the [Connecting the TV and SDK](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/tv-device.html#Connecting-the-TV-and-SDK) guide.
+  </Step>
+
+  <Step title="Launch TizenBrew">
+    Open the TizenBrew app on your TV. TizenBrew is now installed and ready to use.
+  </Step>
+</Steps>

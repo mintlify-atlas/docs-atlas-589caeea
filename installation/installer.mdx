@@ -1,0 +1,46 @@
+---
+title: "Install with TizenBrew Installer"
+description: "The easiest way to install TizenBrew — a desktop app handles everything for you."
+---
+
+TizenBrew Installer is the recommended installation method. It works on every Samsung TV released since 2017 and requires no command-line knowledge.
+
+<Steps>
+  <Step title="Enable Developer Mode on your TV">
+    1. Open **Apps** or **App Settings** on your Samsung TV.
+    2. In the **Apps** panel, enter `12345` using your remote or the on-screen keypad.
+    3. A *Developer Mode* configuration popup appears:
+       - Switch **Developer mode** to **On**.
+       - Under **Host PC IP**, enter your PC's IP address.
+    4. Click **OK**.
+    5. Reboot your TV.
+
+    For more details, see [Connecting the TV and SDK](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/tv-device.html#Connecting-the-TV-and-SDK) on the Samsung developer site.
+  </Step>
+
+  <Step title="Download TizenBrew Installer">
+    Download the [latest executable for your operating system](https://github.com/reisxd/TizenBrewInstaller/releases/latest) from the TizenBrewInstaller releases page.
+
+    On macOS or Linux, you may need to make the file executable before running it:
+
+    ```bash
+    chmod +x tizenbrew-installer-os-arch
+    ```
+
+    Then run the file from your terminal.
+  </Step>
+
+  <Step title="Install TizenBrew">
+    In the TizenBrew Installer window, click **Install TizenBrew**.
+
+    <Note>
+      If your TV runs **Tizen 7 or newer**, you will be prompted to sign in to your Samsung account and create a Samsung certificate. Follow the on-screen instructions to complete this step.
+    </Note>
+  </Step>
+</Steps>
+
+## Installing other apps
+
+<Tip>
+  TizenBrew Installer can also install other apps on your TV, such as Jellyfin, Moonlight, and more. Enter the GitHub repository in `user/repo` format, or provide a WGT or TPK file directly (TV version of TizenBrew Installer only — you can install it from TizenBrew Installer Desktop).
+</Tip>

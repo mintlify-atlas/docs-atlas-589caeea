@@ -1,0 +1,94 @@
+{
+  "projectType": "saas",
+  "projectName": "TizenBrew",
+  "projectDescription": "A modular platform for Samsung Smart TVs that lets users install and run custom apps and site modifications without needing Tizen Studio.",
+  "theme": "almond",
+  "primaryColor": "#5c64f4",
+  "lightColor": "#acb4fc",
+  "darkColor": "#ffffff",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "installation/installer",
+              "installation/command-line"
+            ]
+          },
+          {
+            "group": "Using TizenBrew",
+            "pages": [
+              "using/module-manager",
+              "using/settings",
+              "using/user-agent",
+              "using/debugging"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "advanced/resigning",
+              "advanced/rebuilding"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Module Development",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "modules/introduction",
+              "modules/application-modules",
+              "modules/site-modification-modules"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "modules/package-json-reference",
+              "modules/websocket-events",
+              "modules/examples"
+            ]
+          },
+          {
+            "group": "Contributing",
+            "pages": [
+              "contributing/translations",
+              "contributing/guidelines"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "One-click installation of custom apps and site modifications on Samsung TVs",
+    "Modular system supporting npm and GitHub-hosted modules",
+    "Built-in module manager to add, remove, and configure modules",
+    "Auto-launch support for modules and background services",
+    "Site modification (mods) to inject JavaScript into TV websites",
+    "User-agent customization for compatibility tweaks",
+    "Background Node.js service runner for module services",
+    "Multi-language UI with 20+ supported languages",
+    "TizenBrew Installer desktop app for easy deployment"
+  ],
+  "publicApiSurface": [
+    "package.json#packageType: 'app' | 'mods'",
+    "package.json#appName",
+    "package.json#appPath",
+    "package.json#websiteURL",
+    "package.json#main (injection script)",
+    "package.json#serviceFile (Node.js service)",
+    "package.json#keys (TVInputDevice key list)",
+    "package.json#evaluateScriptOnDocumentStart",
+    "WebSocket Events: Ready, GetModules, LaunchModule, StartService, GetServiceStatuses, ModuleAction, AppControlData, CanLaunchInDebug, ReLaunchInDebug, GetDebugStatus",
+    "ModuleAction actions: add, remove, autolaunch, autolaunchService"
+  ]
+}

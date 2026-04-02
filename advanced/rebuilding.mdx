@@ -1,0 +1,81 @@
+---
+title: "Rebuilding TizenBrew from source"
+description: "How to build TizenBrew from source to apply custom patches or test changes."
+---
+
+You may want to rebuild TizenBrew from source to apply custom patches, test local changes, or package a modified version for your TV.
+
+## Requirements
+
+- [Node.js](https://nodejs.org/) installed on your PC
+- [Tizen Studio](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/installing-tv-sdk.html) installed on your PC
+- A [Samsung certificate](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/creating-certificates.html) created in Tizen Studio Certificate Manager
+
+<Note>
+  `tizen` and `sdb` are located in different directories. Add them to your PATH or use their full paths when running commands.
+
+  <Tabs>
+    <Tab title="Windows">
+      - `tizen`: `C:\tizen-studio\tools\ide\bin`
+      - `sdb`: `C:\tizen-studio\tools`
+    </Tab>
+    <Tab title="Linux">
+      - `tizen`: `~/tizen-studio/tools/ide/bin`
+      - `sdb`: `~/tizen-studio/tools`
+    </Tab>
+  </Tabs>
+</Note>
+
+## Steps
+
+<Steps>
+  <Step title="Get the source code">
+    Clone the repository:
+
+    ```bash
+    git clone https://github.com/reisxd/TizenBrew.git
+    ```
+
+    Alternatively, download the source zip from the [latest release](https://github.com/reisxd/TizenBrew/releases/latest) and extract it.
+  </Step>
+  <Step title="Build the service">
+    In the `tizenbrew-app/TizenBrew/service-nextgen/service/` directory, run:
+
+    ```bash
+    npm install
+    npx @vercel/ncc build index.js
+    ```
+  </Step>
+  <Step title="Build the UI">
+    In the `tizenbrew-app/TizenBrew/tizenbrew-ui/` directory, run:
+
+    ```bash
+    npm install --force
+    npm run build
+    ```
+  </Step>
+  <Step title="Create a Samsung certificate">
+    In Tizen Studio, open **Tools > Certificate Manager** and create a new Samsung certificate. See the [Samsung certificate guide](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/creating-certificates.html) for detailed instructions.
+  </Step>
+  <Step title="Set Host PC IP to your PC's IP">
+    Open **Apps** on your Samsung TV, press `12345` on your remote, and set the **Host PC IP** to your PC's local IP address. Reboot your TV after saving.
+  </Step>
+  <Step title="Connect, build, and install">
+    In the `tizenbrew-app/TizenBrew/` directory, run:
+
+    ```bash
+    sdb connect <TV IP>
+    tizen build-web -e ".*" -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+    tizen package -t wgt -o ./release -- .buildResult
+    tizen install -n ./release/TizenBrewStandalone.wgt
+    ```
+
+    Replace `<TV IP>` with your TV's IP address.
+  </Step>
+  <Step title="Set Host PC IP back to 127.0.0.1">
+    Open **Apps** on your Samsung TV, press `12345` on your remote, and set the **Host PC IP** back to `127.0.0.1`. Reboot your TV after saving.
+  </Step>
+  <Step title="Launch TizenBrew">
+    Open the TizenBrew app on your TV.
+  </Step>
+</Steps>

@@ -1,0 +1,87 @@
+---
+title: "Site modification modules"
+description: "Inject JavaScript into an existing website on the TV to extend or patch its behavior."
+---
+
+Site modification modules target a specific website already accessible on the TV. When a user launches one, TizenBrew navigates to `websiteURL` and injects the module's `main` script into the page. The injected script runs in the context of that page and can read and modify the DOM, intercept network requests, or patch the page's own JavaScript.
+
+## Required `package.json` fields
+
+<ParamField body="packageType" type="string" required>
+  Must be `"mods"`. Tells TizenBrew this is a site modification module.
+</ParamField>
+
+<ParamField body="appName" type="string" required>
+  The user-friendly display name shown in the TizenBrew UI. For example, `"TizenTube"`.
+</ParamField>
+
+<ParamField body="websiteURL" type="string" required>
+  The URL of the website to navigate to and modify. For example, `"https://www.youtube.com/tv"`.
+</ParamField>
+
+<ParamField body="main" type="string" required>
+  The path to the JavaScript file to inject into the website, relative to the package root. For example, `"dist/tizentube.js"`.
+</ParamField>
+
+## Optional `package.json` fields
+
+<ParamField body="keys" type="string[]">
+  An array of key names to register via the [TVInputDevice](https://developer.samsung.com/smarttv/develop/api-references/tizen-web-device-api-references/tvinputdevice-api.html) API. Use this to capture remote control keys that aren't available by default.
+</ParamField>
+
+<ParamField body="serviceFile" type="string">
+  Path to a Node.js file that runs as a background service. The service starts when the module is launched and can continue running while the module is active.
+</ParamField>
+
+<ParamField body="tizenAppId" type="string">
+  The Tizen application ID of a native app. Used when the module needs to launch a native Tizen application.
+</ParamField>
+
+<ParamField body="evaluateScriptOnDocumentStart" type="boolean">
+  When `true`, the script is injected before the page has fully loaded. When `false` or omitted, the script runs after the page finishes loading.
+</ParamField>
+
+<ParamField body="description" type="string">
+  A short description of the module shown in the TizenBrew UI.
+</ParamField>
+
+<Note>
+  Setting `evaluateScriptOnDocumentStart` to `true` causes your script to run before the page's own JavaScript has executed. This is useful when you need to intercept or patch something that happens during page setup — for example, overriding a global function before the site's code calls it.
+</Note>
+
+## Example `package.json`
+
+<CodeGroup>
+
+```json Minimal
+{
+  "name": "my-site-mod",
+  "version": "1.0.0",
+  "packageType": "mods",
+  "appName": "My Site Mod",
+  "websiteURL": "https://example.com/tv",
+  "main": "dist/mod.js"
+}
+```
+
+```json Complete
+{
+  "name": "my-site-mod",
+  "version": "1.0.0",
+  "description": "Enhances example.com on Tizen TVs.",
+  "packageType": "mods",
+  "appName": "My Site Mod",
+  "websiteURL": "https://example.com/tv",
+  "main": "dist/mod.js",
+  "keys": ["ColorF0Red", "ColorF1Green", "ColorF2Yellow", "ColorF3Blue"],
+  "serviceFile": "service/index.js",
+  "tizenAppId": "com.example.app",
+  "evaluateScriptOnDocumentStart": true
+}
+```
+
+</CodeGroup>
+
+<Tip>
+  [TizenTube](https://github.com/reisxd/TizenTube) is a real site modification module that targets YouTube on Tizen TVs. Its `package.json` and build setup are a practical reference for your own module.
+</Tip>

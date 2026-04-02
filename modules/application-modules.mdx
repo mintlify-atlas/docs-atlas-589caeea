@@ -1,0 +1,75 @@
+---
+title: "Application modules"
+description: "Build a standalone web app served locally by TizenBrew's background service."
+---
+
+Application modules are standalone web applications. TizenBrew's background service proxies their files from jsDelivr and serves them locally at `http://127.0.0.1:8081`, so the TV loads them as if they were hosted on the device.
+
+When TizenBrew launches an application module, it navigates to:
+
+```
+http://127.0.0.1:8081/module/<encoded-package-name>/<appPath>
+```
+
+Every request for a file under that path is forwarded to jsDelivr on demand. This means your app's HTML, CSS, JavaScript, and assets are all fetched and served transparently.
+
+## Required `package.json` fields
+
+<ParamField body="packageType" type="string" required>
+  Must be `"app"`. Tells TizenBrew this is an application module.
+</ParamField>
+
+<ParamField body="appName" type="string" required>
+  The user-friendly display name shown in the TizenBrew UI. For example, `"Jellyfin"`.
+</ParamField>
+
+<ParamField body="appPath" type="string" required>
+  The path to your app's entry point (index HTML file), relative to the package root. For example, `"app/index.html"`.
+</ParamField>
+
+## Optional `package.json` fields
+
+<ParamField body="keys" type="string[]">
+  An array of key names to register via the [TVInputDevice](https://developer.samsung.com/smarttv/develop/api-references/tizen-web-device-api-references/tvinputdevice-api.html) API. Use this to capture remote control keys that aren't available by default.
+</ParamField>
+
+<ParamField body="serviceFile" type="string">
+  Path to a Node.js file that runs as a background service. The service starts when the module is launched and can continue running while the module is active.
+</ParamField>
+
+<ParamField body="description" type="string">
+  A short description of the module shown in the TizenBrew UI.
+</ParamField>
+
+## Example `package.json`
+
+<CodeGroup>
+
+```json Minimal
+{
+  "name": "my-tv-app",
+  "version": "1.0.0",
+  "packageType": "app",
+  "appName": "My TV App",
+  "appPath": "app/index.html"
+}
+```
+
+```json Complete
+{
+  "name": "my-tv-app",
+  "version": "1.0.0",
+  "description": "A custom TV application served by TizenBrew.",
+  "packageType": "app",
+  "appName": "My TV App",
+  "appPath": "app/index.html",
+  "keys": ["MediaPlay", "MediaPause", "MediaStop"],
+  "serviceFile": "service/index.js"
+}
+```
+
+</CodeGroup>
+
+<Tip>
+  [Jellyfin-Tizen](https://github.com/GlenLowland/jellyfin-tizen-npm-publish) is a real application module you can use as a reference for how to structure your package and `package.json`.
+</Tip>

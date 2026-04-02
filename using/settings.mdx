@@ -1,0 +1,30 @@
+---
+title: "Settings"
+description: "Configure auto-launch behavior and customize the browser user agent."
+---
+
+The Settings screen exposes three configuration options: auto-launching a module on startup, auto-starting a module's background service, and customizing the browser user agent.
+
+<Note>
+  You need at least one module installed to use the auto-launch settings. If no modules are installed, TizenBrew will display an alert when you try to open either auto-launch option.
+</Note>
+
+## Settings
+
+<AccordionGroup>
+  <Accordion title="Auto-launch module">
+    Configures a module to open automatically every time TizenBrew starts. This is useful if you use TizenBrew as a dedicated launcher for a single app — for example, always starting TizenTube on boot.
+
+    Select **Auto-launch module** from Settings, then choose a module from the list. TizenBrew saves your choice to `autoLaunchModule` in the configuration file. To turn off auto-launch, select **Disable auto-launch** from the same list.
+  </Accordion>
+  <Accordion title="Auto-launch service">
+    Configures a module's background service to start automatically when TizenBrew starts, even before you launch the module itself. Only modules that include a `serviceFile` appear in this list.
+
+    Select **Auto-launch service** from Settings, then choose a module. TizenBrew saves the selection to `autoLaunchServiceList` in the configuration file. To disable, select **Disable auto-launch** from the list.
+  </Accordion>
+  <Accordion title="User agent">
+    Overrides the browser identification string that TizenBrew sends to websites. This can improve compatibility with services that behave differently depending on the reported device or browser.
+
+    Select **User agent** to open the user agent settings screen. See [User agent settings](/using/user-agent) for the full list of options.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,103 @@
+---
+title: "package.json field reference"
+description: "Complete reference for all supported package.json fields in TizenBrew modules."
+---
+
+Every TizenBrew module is a standard npm package with a `package.json` file. TizenBrew reads specific fields from this file to determine how to display and run your module. The required fields depend on the module's `packageType`.
+
+## Common fields
+
+These fields apply to both `app` and `mods` module types.
+
+<ParamField body="packageType" type="string" required>
+  The type of module. Must be `"app"` for application modules or `"mods"` for site modification modules. This field determines which other fields are required.
+</ParamField>
+
+<ParamField body="appName" type="string" required>
+  The display name shown in the TizenBrew Module Manager UI. Use a human-readable name, such as `"TizenTube"`.
+</ParamField>
+
+<ParamField body="version" type="string">
+  Standard npm version field (e.g. `"1.0.0"`). Displayed alongside the module name in the UI.
+</ParamField>
+
+<ParamField body="description" type="string">
+  A short description of the module. Displayed on the module card in the Module Manager.
+</ParamField>
+
+<ParamField body="keys" type="string[]">
+  An array of key names to register using the Samsung [TVInputDevice](https://developer.samsung.com/smarttv/develop/api-references/tizen-web-device-api-references/tvinputdevice-api.html) API. Only keys listed here will be available to your module. Example: `["MediaPlayPause", "MediaStop"]`.
+</ParamField>
+
+<ParamField body="serviceFile" type="string">
+  Path to the Node.js entry point for the module's background service. If present, TizenBrew starts this service when the module is launched. Example: `"service/index.js"`.
+</ParamField>
+
+---
+
+## Application module fields
+
+These fields are required or relevant when `packageType` is `"app"`. Application modules serve a local web page from TizenBrew's built-in HTTP server.
+
+<ParamField body="appPath" type="string" required>
+  Relative path to the module's `index.html` file. TizenBrew constructs a proxied URL from this path and serves it at `http://127.0.0.1:8081/module/<encoded-name>/<appPath>`. Example: `"app/index.html"`.
+</ParamField>
+
+### Example
+
+```json package.json
+{
+  "name": "@example/my-tv-app",
+  "version": "1.0.0",
+  "appName": "My TV App",
+  "description": "A web application for Samsung TVs.",
+  "packageType": "app",
+  "appPath": "app/index.html",
+  "keys": ["MediaPlayPause", "MediaStop"],
+  "serviceFile": "service/index.js"
+}
+```
+
+---
+
+## Site modification module fields
+
+These fields are required or relevant when `packageType` is `"mods"`. Site modification modules inject JavaScript into an existing website.
+
+<ParamField body="websiteURL" type="string" required>
+  The full URL of the website to open and modify. TizenBrew navigates to this URL and injects your script. Example: `"https://www.youtube.com"`.
+</ParamField>
+
+<ParamField body="main" type="string" required>
+  Relative path to the JavaScript file that will be injected into the target website. Example: `"index.js"`.
+</ParamField>
+
+<ParamField body="evaluateScriptOnDocumentStart" type="boolean">
+  When `true`, the injection script runs before the page has fully loaded (equivalent to `document_start`). When `false` or omitted, the script runs after the page finishes loading. Defaults to `false`.
+</ParamField>
+
+<ParamField body="tizenAppId" type="string">
+  The Tizen native application ID used for app control. Set this if your module needs to receive or send app control events to another Tizen native app.
+</ParamField>
+
+### Example
+
+```json package.json
+{
+  "name": "@example/my-site-mod",
+  "version": "1.0.0",
+  "appName": "My Site Mod",
+  "description": "Enhances a website on Samsung TV.",
+  "packageType": "mods",
+  "websiteURL": "https://www.example.com",
+  "main": "index.js",
+  "evaluateScriptOnDocumentStart": true,
+  "tizenAppId": "com.example.nativeapp",
+  "keys": ["ColorF0Red", "ColorF1Green"],
+  "serviceFile": "service/index.js"
+}
+```
+
+<Note>
+  The `serviceFile` field is optional for both module types. If you do not need a background Node.js service, omit it entirely.
+</Note>

@@ -1,0 +1,49 @@
+---
+title: "Resigning TizenBrew"
+description: "How to resign TizenBrew with your own Samsung certificate."
+---
+
+You need to resign TizenBrew when your Samsung certificate changes or expires. This is most common on Tizen 7 and above, where Samsung certificates are tied to your Samsung account.
+
+## Requirements
+
+- [Tizen Studio](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/installing-tv-sdk.html) installed on your PC
+- A [Samsung certificate](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/creating-certificates.html) created in Tizen Studio Certificate Manager
+- The TizenBrew `.wgt` package downloaded from the [latest release](https://github.com/reisxd/TizenBrew/releases/latest)
+
+<Note>
+  The `tizen` command is located at `C:\tizen-studio\tools\ide\bin` on Windows and `~/tizen-studio/tools/ide/bin` on Linux. Add it to your PATH or use the full path when running commands.
+</Note>
+
+## Steps
+
+<Steps>
+  <Step title="Resign the package">
+    Run the following command, replacing `<profile name>` with the name of your Samsung certificate profile and `path/to/TizenBrewStandalone.wgt` with the path to the downloaded `.wgt` file:
+
+    ```bash
+    tizen package -t wgt -s <profile name> -o ./resigned -- path/to/TizenBrewStandalone.wgt
+    ```
+
+    For example:
+
+    ```bash
+    tizen package -t wgt -s MyProfile -o ./resigned -- path/to/TizenBrewStandalone.wgt
+    ```
+
+    This creates a resigned package in the `./resigned` directory.
+  </Step>
+  <Step title="Install the resigned package">
+    Install the resigned package to your TV:
+
+    ```bash
+    tizen install -n ./resigned/TizenBrewStandalone.wgt
+    ```
+  </Step>
+  <Step title="Set Host PC IP to 127.0.0.1">
+    Open **Apps** on your Samsung TV, press `12345` on your remote, and set the **Host PC IP** to `127.0.0.1`. Reboot your TV after saving.
+  </Step>
+  <Step title="Launch TizenBrew">
+    Open the TizenBrew app on your TV.
+  </Step>
+</Steps>

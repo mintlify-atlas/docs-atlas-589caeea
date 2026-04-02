@@ -1,97 +1,67 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Welcome to TizenBrew"
+description: "Install custom apps and site modifications on your Samsung Smart TV — no Tizen Studio required."
 ---
 
-## Setting up
+TizenBrew is a modular platform for Samsung Smart TVs (Tizen 3.0+) that lets you install and run custom apps and website modifications with a single click. No fighting with Tizen Studio every time you want to update an app.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Get Started" icon="rocket" href="/introduction">
+    Learn what TizenBrew is and what you can do with it.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Installation" icon="download" href="/installation">
+    Install TizenBrew on your Samsung TV in minutes.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Module Manager" icon="grid-2" href="/using/module-manager">
+    Add, remove, and launch modules from the TizenBrew UI.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Build a Module" icon="code" href="/modules/introduction">
+    Create your own app or site modification module.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## How it works
 
-Everything you need to create world-class documentation.
+TizenBrew runs as a Tizen widget on your TV. A background Node.js service manages modules — fetching them from npm or GitHub, serving their files locally, and injecting scripts into websites. The UI lets you browse and launch your installed modules without ever touching Tizen Studio again.
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+<Steps>
+  <Step title="Enable Developer Mode on your TV">
+    Open **Apps**, enter `12345`, turn on Developer Mode, and enter your PC's IP address.
+  </Step>
+  <Step title="Install TizenBrew">
+    Download and run [TizenBrew Installer](https://github.com/reisxd/TizenBrewInstaller/releases/latest) on your PC, then click **Install TizenBrew**.
+  </Step>
+  <Step title="Add modules">
+    Launch TizenBrew on your TV, open **Module Manager**, and add modules by npm package name or GitHub repository.
+  </Step>
+  <Step title="Launch your app">
+    Select any installed module from the home screen and it launches instantly.
+  </Step>
+</Steps>
 
-## Need inspiration?
+## Key features
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<CardGroup cols={2}>
+  <Card title="One-click installs" icon="circle-check">
+    Install apps and site mods directly from the TV UI — no PC commands needed after initial setup.
+  </Card>
+  <Card title="npm & GitHub modules" icon="box">
+    Any npm package or GitHub repo can be a TizenBrew module, served via jsDelivr CDN.
+  </Card>
+  <Card title="Site modifications" icon="pen-to-square">
+    Inject JavaScript into TV websites (like YouTube) to enable custom features.
+  </Card>
+  <Card title="Background services" icon="server">
+    Modules can include a Node.js service that runs in the background, even when the module isn't active.
+  </Card>
+  <Card title="Auto-launch" icon="play">
+    Configure a module to launch automatically when TizenBrew starts.
+  </Card>
+  <Card title="20+ languages" icon="language">
+    TizenBrew's UI is localized into more than 20 languages.
+  </Card>
+</CardGroup>
+
+<Note>
+  TizenBrew requires a Samsung TV running Tizen 3.0 or newer (2017 models and later).
+</Note>

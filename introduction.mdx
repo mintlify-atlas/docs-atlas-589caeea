@@ -1,0 +1,36 @@
+---
+title: "Introduction"
+description: "Learn what TizenBrew is, how it works, and what you need to get started."
+---
+
+TizenBrew is a modular platform for Samsung Smart TVs (Tizen 3.0 and newer) that lets you install custom apps and site modifications without dealing with Tizen Studio every time you want to update something. Install TizenBrew once, then manage everything else directly from your TV.
+
+<Note>
+  TizenBrew requires a Samsung TV running Tizen 3.0 or newer (2017 models and later).
+</Note>
+
+## Module types
+
+TizenBrew supports two kinds of modules:
+
+**Application modules** are web pages served locally on your TV. They behave like standalone apps — you launch them from the TizenBrew home screen. [Jellyfin-Tizen](https://github.com/GlenLowland/jellyfin-tizen-npm-publish) is a popular example: a full Jellyfin media client that runs directly on your TV.
+
+**Site modification modules** inject JavaScript into an existing website running on your TV's browser. This lets you add features or patch behavior without modifying the site itself. [TizenTube](https://github.com/reisxd/TizenTube) is the best-known example — it enhances YouTube on Tizen with features Samsung's default app doesn't support.
+
+## Requirements
+
+- A Samsung Smart TV running **Tizen 3.0 or newer** (2017 or later models)
+- A PC on the same local network as your TV (for initial installation)
+
+## Install TizenBrew
+
+Choose the method that works best for you:
+
+<CardGroup cols={2}>
+  <Card title="TizenBrew Installer" icon="download" href="/installation/installer">
+    The recommended method. A desktop app handles everything for you — works on every Samsung TV since 2017.
+  </Card>
+  <Card title="Command line" icon="terminal" href="/installation/command-line">
+    Use Tizen Studio CLI tools to install manually. Suitable if you already have Tizen Studio set up.
+  </Card>
+</CardGroup>

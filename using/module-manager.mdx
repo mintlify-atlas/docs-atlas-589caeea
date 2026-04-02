@@ -1,0 +1,68 @@
+---
+title: "Module Manager"
+description: "Add, remove, and view the modules installed on your TizenBrew device."
+---
+
+The Module Manager is where you install and manage modules on your TV. Each installed module appears as a card showing its name, version, and description. Selecting a module card prompts you to remove it.
+
+Modules are persisted in the TizenBrew configuration file at `/home/owner/share/tizenbrewConfig.json`. The module list is fetched from jsDelivr CDN each time the Module Manager loads.
+
+## Adding a module
+
+TizenBrew supports two module sources: npm and GitHub.
+
+<Note>
+  Module names are case-sensitive. Make sure to use the exact casing from the npm registry or GitHub repository.
+</Note>
+
+### Add from npm
+
+<Steps>
+  <Step title="Open Module Manager">
+    From the TizenBrew home screen, navigate to **Module Manager**.
+  </Step>
+  <Step title="Select &quot;Add from npm&quot;">
+    Select the **Add from npm** card.
+  </Step>
+  <Step title="Enter the package name">
+    Type the npm package name exactly as it appears on the npm registry, then confirm. For example:
+
+    ```text
+    @foxreis/tizentube
+    ```
+
+    TizenBrew prefixes your input with `npm/` internally, so the stored identifier becomes:
+
+    ```text
+    npm/@foxreis/tizentube
+    ```
+  </Step>
+</Steps>
+
+### Add from GitHub
+
+<Steps>
+  <Step title="Open Module Manager">
+    From the TizenBrew home screen, navigate to **Module Manager**.
+  </Step>
+  <Step title="Select &quot;Add from GitHub&quot;">
+    Select the **Add from GitHub** card.
+  </Step>
+  <Step title="Enter the repository">
+    Type the repository in `user/repo` format, then confirm. For example:
+
+    ```text
+    username/reponame
+    ```
+
+    TizenBrew prefixes your input with `gh/` internally, so the stored identifier becomes:
+
+    ```text
+    gh/username/reponame
+    ```
+  </Step>
+</Steps>
+
+## Removing a module
+
+Select the module's card in the Module Manager. A confirmation dialog appears asking you to confirm deletion. Confirm to remove the module from your configuration.
